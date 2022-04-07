@@ -2,7 +2,7 @@
 :description: TData Visualisation Tool
 :keywords: python, data, students, research, visualisation, plot
 :author: Maximilian Anzinger
-:revnumber: 1.0.0
+:revnumber: 0.1.0
 :revdate: 2022-04-05
 :revremark: 
 :showtitle:
@@ -15,24 +15,23 @@
 
 Data Visualisation Tool
 
+== About
+
+image:https://img.shields.io/github/release/MaximilianAnzinger/Lotus/StrapDown.js.svg[GitHub release]
+image:https://badgen.net/github/last-commit/MaximilianAnzinger/Lotus/Strapdown.js[GitHub last commit]
 image:https://img.shields.io/badge/Made%20with-Python-1f425f.svg[python]
-image:https://img.shields.io/badge/maintainer-Maximilian Anzinger-blue[Maintainer]
 image:https://svgshare.com/i/Zhy.svg[linux]
 image:https://svgshare.com/i/ZjP.svg[macOS]
 image:https://svgshare.com/i/ZhY.svg[windows]
-image:https://img.shields.io/pypi/l/ansicolortags.svg[MIT]
-image:https://badgen.net/github/license/Naereen/Strapdown.js[GitHub license]
-image:https://badgen.net/github/branches/Naereen/Strapdown.js[GitHub branches]
-image:https://img.shields.io/github/release/Naereen/StrapDown.js.svg[GitHub release]
-image:https://badgen.net/github/last-commit/Naereen/Strapdown.js[GitHub last commit]
-
-== About
+image:https://img.shields.io/badge/maintainer-Maximilian Anzinger-blue[Maintainer]
 
 asdf
 
 == Setup
 
-First you need to download the repository by either opening a terminal, changing into the desired directory and using git clone `https://github.com/MaximilianAnzinger/Lotus.git` to clone the repository. Note that for this git has to be installed on your system.
+It is recommendet to download the latest https://github.com/MaximilianAnzinger/Lotus/releases[`Release`]. Extract the files to your prefered working space and continue in section 3.
+
+Furthermore, you can download the repository by either opening a terminal, changing into the desired directory and using git clone `https://github.com/MaximilianAnzinger/Lotus.git` to clone the repository. Note that for this git has to be installed on your system and you might experience more bugs compared to the latest release.
 
 If you don't have git or are unsure on how to use it, then you can scroll to the top, press the green `code` button and download the project as a zip-archive. Note that you first have to unzip the archive before continuing.
 
@@ -77,6 +76,8 @@ For more information please refere to the https://github.com/MaximilianAnzinger/
 
 == Contribute
 
+image:https://badgen.net/github/contributors/MaximilianAnzinger/Lotus[Github contributors]
+
 All contributions are appreciated. Feel free to fork the project and create a pull request at any time.
 
 == Additional Notes
@@ -84,5 +85,6 @@ All contributions are appreciated. Feel free to fork the project and create a pu
 asdf
 
 == License
+image:https://badgen.net/github/license/MaximilianAnzinger/Lotus/Strapdown.js[GitHub license]
 
 Lotus was created by {author} and is licensed under the https://github.com/MaximilianAnzinger/Lotus/blob/main/LICENSE[MIT License, see `LICENSE`].

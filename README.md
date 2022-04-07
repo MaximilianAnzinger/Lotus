@@ -1,2 +1,0 @@
-# Lotus
-Data Visualisation Tool

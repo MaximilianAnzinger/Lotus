@@ -11,27 +11,56 @@
 :toclevels: 3
 :icons: font
 
+:owner: MaximilianAnzinger
+:repo: Lotus
+:pyver: 3.8.10
+:pyver-url: 3810
+:matplotlibver: 3.5
+
 = Lotus
 
 Data Visualisation Tool
 
 == About
 
-image:https://img.shields.io/github/release/MaximilianAnzinger/Lotus/StrapDown.js.svg[GitHub release]
-image:https://badgen.net/github/last-commit/MaximilianAnzinger/Lotus/Strapdown.js[GitHub last commit]
-image:https://img.shields.io/badge/Made%20with-Python-1f425f.svg[python]
-image:https://svgshare.com/i/Zhy.svg[linux]
-image:https://svgshare.com/i/ZjP.svg[macOS]
-image:https://svgshare.com/i/ZhY.svg[windows]
+image:https://img.shields.io/github/release/{owner}/{repo}/StrapDown.js.svg[GitHub release]
+image:https://badgen.net/github/last-commit/{owner}/{repo}/Strapdown.js[GitHub last commit]
 image:https://img.shields.io/badge/maintainer-Maximilian Anzinger-blue[Maintainer]
 
 asdf
 
 == Setup
 
-It is recommendet to download the latest https://github.com/MaximilianAnzinger/Lotus/releases[`Release`]. Extract the files to your prefered working space and continue in section 3.
+=== Prerequesits
 
-Furthermore, you can download the repository by either opening a terminal, changing into the desired directory and using git clone `https://github.com/MaximilianAnzinger/Lotus.git` to clone the repository. Note that for this git has to be installed on your system and you might experience more bugs compared to the latest release.
+==== Python
+
+image:https://img.shields.io/badge/python-{pyver}-blue.svg[python]
+
+To run Lotus https://www.python.org/[`Python`] is required. Either install the https://www.python.org/downloads/[`latest version`] or use the recommended version https://www.python.org/downloads/release/python-{pyverurl}/[`{pyver}`].
+
+==== Matplotlib
+
+image:https://img.shields.io/badge/Matplotlib-{matplotlibver}-blue.svg[matplotlib]
+
+Lotus relies on the library https://matplotlib.org/stable/index.html#[`Matplotlib`]. Either use one of the following two comands or refere to their documentation for further instructions.
+
+.Install using pip:
+[source,shell]
+----
+pip install matplotlib
+----
+
+.Install using conda:
+[source,shell]
+----
+conda install matplotlib
+----
+
+=== Lotus
+It is recommendet to download the latest https://github.com/{owner}/{repo}/releases[`Release`]. Extract the files to your prefered working space and continue in section 3.
+
+Furthermore, you can download the repository by either opening a terminal, changing into the desired directory and using git clone `https://github.com/{owner}/{repo}.git` to clone the repository. Note that you might experience more bugs compared to the latest release version.
 
 If you don't have git or are unsure on how to use it, then you can scroll to the top, press the green `code` button and download the project as a zip-archive. Note that you first have to unzip the archive before continuing.
 
@@ -72,19 +101,15 @@ asdf
 
 === Advanced
 
-For more information please refere to the https://github.com/MaximilianAnzinger/Lotus/wiki[`wiki`]
+For more information please refere to the https://github.com/{owner}/{repo}/wiki[`wiki`]
 
 == Contribute
 
-image:https://badgen.net/github/contributors/MaximilianAnzinger/Lotus[Github contributors]
+image:https://badgen.net/github/contributors/{owner}/{repo}[Github contributors]
 
 All contributions are appreciated. Feel free to fork the project and create a pull request at any time.
 
-== Additional Notes
-
-asdf
-
 == License
-image:https://badgen.net/github/license/MaximilianAnzinger/Lotus/Strapdown.js[GitHub license]
+image:https://badgen.net/github/license/{owner}/{repo}/Strapdown.js[GitHub license]
 
-Lotus was created by {author} and is licensed under the https://github.com/MaximilianAnzinger/Lotus/blob/main/LICENSE[MIT License, see `LICENSE`].
+Lotus was created by {author} and is licensed under the https://github.com/{owner}/{repo}/blob/main/LICENSE[MIT License, see `LICENSE`].

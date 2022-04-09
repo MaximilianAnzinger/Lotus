@@ -2,7 +2,7 @@ from lotus.dataset import DataSet
 
 
 def test_init():
-    dataset = DataSet("test", (), [])
+    dataset = DataSet("testt", (), [])
     assert dataset is not None
 
 

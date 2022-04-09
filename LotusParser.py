@@ -4,7 +4,7 @@ TODO
 """
 
 import csv
-from DataSet import DataSet
+from lotus.dataset import DataSet
 
 __author__ = "Maximilian Anzinger"
 __copyright__ = "Copyright 2022, Maximilian Anzinger"

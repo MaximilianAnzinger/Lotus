@@ -5,6 +5,7 @@ TODO
 import sys
 from typing import List, Dict, Tuple
 import numpy as np
+from numpy.typing import ArrayLike
 
 __author__ = "Maximilian Anzinger"
 __copyright__ = "Copyright 2007, The Cogent Project"
@@ -21,11 +22,8 @@ class DataSet:
     # groups: List[str]
     def __init__(self, title: str, groups: Tuple[str], labels: List[str]):
         """Returns new DataSet object with specified title, groups and labels
-
         title: Arbitrary titel of the DataSet.
-
         groups: List of all labels of the groups of the DataSet.
-
         labels: List of all labels.
         """
 
@@ -34,10 +32,10 @@ class DataSet:
         self._GroupCount = len(groups)
         self._Labels = labels
         self._LabelCount = len(labels)
-        self._data = {}
+        self._data: Dict[str, List[List[float]]] = {}
         for label in self._Labels:
             self._data[label] = [[] for group in groups]
-        self._SimplifiedData = {}
+        self._SimplifiedData: Dict[str, List[Dict[str, float]]] = {}
 
     @property
     def Title(self) -> str:
@@ -48,7 +46,7 @@ class DataSet:
         del self._Title
 
     @property
-    def Groups(self) -> List[str]:
+    def Groups(self) -> Tuple[str]:
         return self._Groups
 
     @property
@@ -65,9 +63,7 @@ class DataSet:
 
     def addRow(self, row: List[float]):
         """Adds new row to the DataSet
-
         row: List of float values with matching length.
-
         Note: if length of the list doesn't match the specifications of the DataSet,
         the program will exit with an error message.
         """
@@ -79,31 +75,26 @@ class DataSet:
 
     def getData(self, label: str) -> List[List[float]]:
         """Returns data corresponding to the specified label
-
         label: TODO
-
         Note: if the specified label is not contained by the DataSet, None will be returned.
         """
         if label in self.Labels:
             return self._data[label]
-        return None
+        return []
 
     def _generate_simplified_data(self, label: str):
         """
         Adds information for simplified representation of the data for the specified label.
-
         label: TODO
         """
         data = self.getData(label)
-        if data is None:
-            return None
         simplifiedData = []
         for d in data:
             entry = {}
             entry['min'] = min(d)
             entry['max'] = max(d)
-            nparr = np.asarray(d)
-            entry['avg'] = np.average(nparr)
+            nparr: ArrayLike = np.asarray(d)
+            entry['avg'] = float(np.average(nparr))
             entry['var'] = np.var(nparr)
             entry['mean'] = np.mean(nparr)
             entry['std'] = np.std(nparr)

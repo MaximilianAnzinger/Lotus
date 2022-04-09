@@ -27,6 +27,8 @@ image:https://img.shields.io/github/release/{owner}/{repo}/StrapDown.js.svg[GitH
 image:https://badgen.net/github/last-commit/{owner}/{repo}/Strapdown.js[GitHub last commit]
 image:https://img.shields.io/badge/maintainer-Maximilian Anzinger-blue[Maintainer]
 
+image:https://github.com/{owner}/{repo}/actions/workflows/tests.yml/badge.svg?branch=master[tests]
+
 asdf
 
 == Setup

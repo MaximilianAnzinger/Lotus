@@ -25,7 +25,7 @@ def setup_parsing() -> str:
     print("Enter file: (-h for help) ------------------------------")
     while (file_dir := input()) in ["-h", "h", "help"]:
         print("Possible candidates:")
-        for file in glob.glob("*.csv"):
+        for file in glob.glob("**/***.csv", recursive=True):
             print(file)
         print("\nEnter file: (-h for help) ------------------------------")
     print("SETUP: COMPLETE ----------------------------------------\n")
@@ -59,12 +59,14 @@ def plot(datasets):
         print("Print titles: (y/n) ------------------------------------")
         method = input()
 
+    print(method)
+
     print("PLOTTER: COMPLETE --------------------------------------\n")
 
 
 if __name__ == "__main__":
     """Main entry point to execute Lotus"""
-    # file_dir = setup_parsing()
+    file_dir = setup_parsing()
     # datasets = parsing(file_dir)
     # plot(datasets)
 

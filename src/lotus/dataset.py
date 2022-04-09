@@ -20,7 +20,7 @@ __status__ = "Development"
 class DataSet:
 
     # groups: List[str]
-    def __init__(self, title: str, groups: Tuple[str], labels: List[str]):
+    def __init__(self, title: str, groups: Tuple[str, ...], labels: List[str]):
         """Returns new DataSet object with specified title, groups and labels
         title: Arbitrary titel of the DataSet.
         groups: List of all labels of the groups of the DataSet.
@@ -46,7 +46,7 @@ class DataSet:
         del self._Title
 
     @property
-    def Groups(self) -> Tuple[str]:
+    def Groups(self) -> Tuple[str, ...]:
         return self._Groups
 
     @property

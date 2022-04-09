@@ -3,7 +3,7 @@ from lotus.dataset import DataSet
 
 def test_init():
     dataset = DataSet("test", (), [])
-    pass
+    assert dataset is not None
 
 
 def test_addRow():

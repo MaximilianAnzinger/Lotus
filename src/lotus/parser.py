@@ -1,10 +1,10 @@
-
 """
 TODO
 """
-
 import csv
-from typing import List, Tuple
+from typing import List
+from typing import Tuple
+
 from lotus.dataset import DataSet
 
 __author__ = "Maximilian Anzinger"
@@ -18,8 +18,7 @@ __status__ = "Development"
 
 
 class LotusParser:
-
-    def __init__(self, fileDir, floatSep='.', delimiter=',', quotechar='|') -> None:
+    def __init__(self, fileDir, floatSep=".", delimiter=",", quotechar="|") -> None:
         self.fileDir = fileDir
 
         self.floatSep = floatSep
@@ -37,7 +36,7 @@ class LotusParser:
         del self.rawData
 
     def importData(self):
-        with open(self.fileDir, newline='') as csvfile:
+        with open(self.fileDir, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=self.delimiter)
             self.rawData = []
             for row in reader:
@@ -46,21 +45,26 @@ class LotusParser:
     def _parse_dataset(self, base_offset: int) -> int:
         # generate labels
         labels = self.rawData[base_offset + 1]
-        while(labels[-1] == ''):
+        while labels[-1] == "":
             labels.pop()
 
         if len(labels) % len(self._groups) != 0:
             raise ValueError(
-                f"Found invalid dataset: {self.rawData[base_offset][0]} - Number of columns must be a multiple of {len(self._groups)}.")
+                f"Found invalid dataset: {self.rawData[base_offset][0]} - Number of columns must be a multiple of {len(self._groups)}."
+            )
         col = len(labels) // len(self._groups)
 
         # structure values
-        dataSet = DataSet(self.rawData[base_offset]
-                          [0], self._groups, labels[0:col])
+        dataSet = DataSet(
+            self.rawData[base_offset][0], self._groups, tuple(labels[0:col])
+        )
         offset: int = 2
-        while(base_offset + offset < len(self.rawData) and self.rawData[base_offset + offset][0] != ''):
+        while (
+            base_offset + offset < len(self.rawData)
+            and self.rawData[base_offset + offset][0] != ""
+        ):
             raw_row = self.rawData[base_offset + offset]
-            row = [self._str_to_float(i) for i in raw_row[0:len(labels)]]
+            row = [self._str_to_float(i) for i in raw_row[: len(labels)]]
             dataSet.addRow(row)
             offset += 1
 
@@ -71,15 +75,20 @@ class LotusParser:
 
         if len(self.rawData) == 0:
             raise ValueError(
-                f"Invalid file: {self.fileDir} -  First row doen't match the specifications.")
+                f"Invalid file: {self.fileDir} -  First row doen't match the specifications."
+            )
 
         # generate groups
-        self._groups = tuple(str(cell) for i, cell in enumerate(self.rawData[0]) if not (cell == '' or i == 0))
+        self._groups = tuple(
+            str(cell)
+            for i, cell in enumerate(self.rawData[0])
+            if not (cell == "" or i == 0)
+        )
 
         # parse datasets
         offset = 1
         while offset < len(self.rawData):
-            if self.rawData[offset][0] == '':
+            if self.rawData[offset][0] == "":
                 offset += 1
             else:
                 offset = self._parse_dataset(offset)
@@ -88,15 +97,14 @@ class LotusParser:
         return self.dataSets
 
     def _str_to_float(self, str: str) -> float:
-        if self.floatSep == '.':
+        if self.floatSep == ".":
             temp = str
         else:
-            temp = str.replace(self.floatSep, '.')
+            temp = str.replace(self.floatSep, ".")
 
         try:
             out = float(temp)
         except ValueError:
-            raise ValueError(
-                f"Found invalid dataset: Can not convert {str} to float.")
+            raise ValueError(f"Found invalid dataset: Can not convert {str} to float.")
         finally:
             return out

@@ -1,9 +1,11 @@
 """
 TODO
 """
-
 import sys
-from typing import List, Dict, Tuple
+from typing import Dict
+from typing import List
+from typing import Tuple
+
 import numpy as np
 from numpy.typing import ArrayLike
 
@@ -18,13 +20,11 @@ __status__ = "Development"
 
 
 class DataSet:
-
-    # groups: List[str]
-    def __init__(self, title: str, groups: Tuple[str, ...], labels: List[str]):
+    def __init__(self, title: str, groups: Tuple[str, ...], labels: Tuple[str, ...]):
         """Returns new DataSet object with specified title, groups and labels
         title: Arbitrary titel of the DataSet.
-        groups: List of all labels of the groups of the DataSet.
-        labels: List of all labels.
+        groups: Tuple of all labels of the groups of the DataSet.
+        labels: Tuple of all labels.
         """
 
         self._Title = title
@@ -54,7 +54,7 @@ class DataSet:
         return self._GroupCount
 
     @property
-    def Labels(self) -> List[str]:
+    def Labels(self) -> Tuple[str, ...]:
         return self._Labels
 
     @property
@@ -91,13 +91,13 @@ class DataSet:
         simplifiedData = []
         for d in data:
             entry = {}
-            entry['min'] = min(d)
-            entry['max'] = max(d)
+            entry["min"] = min(d)
+            entry["max"] = max(d)
             nparr: ArrayLike = np.asarray(d)
-            entry['avg'] = float(np.average(nparr))
-            entry['var'] = np.var(nparr)
-            entry['mean'] = np.mean(nparr)
-            entry['std'] = np.std(nparr)
+            entry["avg"] = float(np.average(nparr))
+            entry["var"] = np.var(nparr)
+            entry["mean"] = np.mean(nparr)
+            entry["std"] = np.std(nparr)
             simplifiedData.append(entry)
 
         self._SimplifiedData[label] = simplifiedData

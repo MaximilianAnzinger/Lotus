@@ -13,8 +13,7 @@
 
 :owner: MaximilianAnzinger
 :repo: Lotus
-:pyver: 3.8.10
-:pyver-url: https://www.python.org/downloads/release/python-3810/
+:pyver: 3.8+
 :matplotlibver: 3.5
 
 = Lotus
@@ -37,9 +36,9 @@ asdf
 
 ==== Python
 
-image:https://img.shields.io/badge/python-3.8+-blue.svg[python]
+image:https://img.shields.io/badge/python-{pyver}-blue.svg[python]
 
-To run Lotus https://www.python.org/[`Python`] is required. Either install the https://www.python.org/downloads/[`latest version`] or use the recommended version {pyver-url}[`{pyver}`].
+To run Lotus https://www.python.org/[`Python`] is required. Either install the https://www.python.org/downloads/[`latest version`] or use any other supported version ({pyver}).
 
 ==== Matplotlib
 

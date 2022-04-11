@@ -4,7 +4,7 @@
 :author: Maximilian Anzinger
 :revnumber: 0.1.0
 :revdate: 2022-04-05
-:revremark: 
+:revremark:
 :showtitle:
 :sectnums:
 :toc: preamble
@@ -37,7 +37,7 @@ asdf
 
 ==== Python
 
-image:https://img.shields.io/badge/python-{pyver}-blue.svg[python]
+image:https://img.shields.io/badge/python-3.8+-blue.svg[python]
 
 To run Lotus https://www.python.org/[`Python`] is required. Either install the https://www.python.org/downloads/[`latest version`] or use the recommended version {pyver-url}[`{pyver}`].
 

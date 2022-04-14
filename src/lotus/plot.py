@@ -1,19 +1,22 @@
-
 """
 TODO
 """
-
-import sys
-import os
-from os import path
+import abc
 import colorsys
-from typing import List, Optional, Tuple, Union
+import os
+import sys
+from datetime import datetime
+from os import path
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
+
 import matplotlib as mpl
+import matplotlib.pyplot as plt
+from lotus.dataset import DataSet
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-from datetime import datetime
-from lotus.dataset import DataSet
 
 __author__ = "Maximilian Anzinger"
 __copyright__ = "Copyright 2007, The Cogent Project"
@@ -27,21 +30,71 @@ __status__ = "Development"
 COLOR_TYPE = Union[str, Tuple[float, float, float]]
 
 
-class LotusPlot:
+class Plotter(metaclass=abc.ABCMeta):
+    @classmethod
+    def __subclasshook__(cls, subclass):
+        return (
+            hasattr(subclass, "parse")
+            and callable(subclass.parse)
+            and hasattr(subclass, "getDataSets")
+            and callable(subclass.getDataSets)
+        )
 
+    @abc.abstractmethod
+    def __init__(self, datasets: List[DataSet], file_extension=".svg") -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def enableTitle(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def exportMinPlotPerDataset(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def exportMinPlotForDatasets(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def exportSimpPlotPerDataset(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def exportSimpPlotForDatasets(self):
+        raise NotImplementedError
+
+
+class LotusPlot(Plotter):
     def __init__(self, datasets: List[DataSet], file_extension=".svg") -> None:
         self._datasets = datasets
         self._file_extension = file_extension
         self._outpath = os.getcwd()
         self._draw_title = False
 
-        self.COLORS: Tuple[COLOR_TYPE, ...] = ("grey", "blue", "green",
-                                               "red", "purple", "olive", "orange")
+        self.COLORS: Tuple[COLOR_TYPE, ...] = (
+            "grey",
+            "blue",
+            "green",
+            "red",
+            "purple",
+            "olive",
+            "orange",
+        )
 
     def enableTitle(self):
         self._draw_title = True
 
-    def _generate_field_plot_for_label(self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE, field: str, marker: str, linestyle: str):
+    def _generate_field_plot_for_label(
+        self,
+        dataSet: DataSet,
+        label: str,
+        ax: Axes,
+        color: COLOR_TYPE,
+        field: str,
+        marker: str,
+        linestyle: str,
+    ):
         """Helper method that adds plot for the specified data
 
         `dataSet`: DataSet
@@ -61,27 +114,46 @@ class LotusPlot:
         simpleData = dataSet.getSimpData(label)
         x = dataSet.Groups
         avg_y = [entry[field] for entry in simpleData]
-        ax.plot(x, avg_y, label=label + " " + field,
-                marker=marker, linestyle=linestyle, color=color)
+        ax.plot(
+            x,
+            avg_y,
+            label=label + " " + field,
+            marker=marker,
+            linestyle=linestyle,
+            color=color,
+        )
 
-    def _generate_min_plot_for_label(self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE):
+    def _generate_min_plot_for_label(
+        self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE
+    ):
         self._generate_field_plot_for_label(
-            dataSet, label, ax, color, 'min', 'o', 'dotted')
+            dataSet, label, ax, color, "min", "o", "dotted"
+        )
 
-    def _generate_max_plot_for_label(self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE):
+    def _generate_max_plot_for_label(
+        self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE
+    ):
         self._generate_field_plot_for_label(
-            dataSet, label, ax, color, 'max', 'o', 'dotted')
+            dataSet, label, ax, color, "max", "o", "dotted"
+        )
 
-    def _generate_avg_plot_for_label(self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE):
+    def _generate_avg_plot_for_label(
+        self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE
+    ):
         self._generate_field_plot_for_label(
-            dataSet, label, ax, color, 'avg', '^', 'solid')
+            dataSet, label, ax, color, "avg", "^", "solid"
+        )
 
-    def _generate_simp_plot_for_label(self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE):
+    def _generate_simp_plot_for_label(
+        self, dataSet: DataSet, label: str, ax: Axes, color: COLOR_TYPE
+    ):
         self._generate_min_plot_for_label(dataSet, label, ax, color)
         self._generate_max_plot_for_label(dataSet, label, ax, color)
         self._generate_avg_plot_for_label(dataSet, label, ax, color)
 
-    def _generate_min_plot_for_dataset(self, dataSet: DataSet, fig: Figure, ax: Axes, color=None):
+    def _generate_min_plot_for_dataset(
+        self, dataSet: DataSet, fig: Figure, ax: Axes, color=None
+    ):
         colors: Tuple[COLOR_TYPE, ...] = ()
         if color is None:
             colors = self.COLORS
@@ -89,30 +161,41 @@ class LotusPlot:
             min_factor = 0.5
             max_factor = 1.5
             step = (max_factor - min_factor) / (dataSet.LabelCount - 1)
-            colors = tuple(self._lightenColor(color, min_factor + i * step)
-                           for i in range(len(dataSet.Labels)))
+            colors = tuple(
+                self._lightenColor(color, min_factor + i * step)
+                for i in range(len(dataSet.Labels))
+            )
         for i, label in enumerate(dataSet.Labels):
             self._generate_avg_plot_for_label(dataSet, label, ax, colors[i])
 
-    def _generate_simp_plot_for_dataset(self, dataSet: DataSet, fig: Figure, ax: Axes, color: Optional[COLOR_TYPE] = None):
+    def _generate_simp_plot_for_dataset(
+        self,
+        dataSet: DataSet,
+        fig: Figure,
+        ax: Axes,
+        color: Optional[COLOR_TYPE] = None,
+    ):
         if color is None:
             colors = self.COLORS
         else:
             min_factor = 0.5
             max_factor = 1.5
             step = (max_factor - min_factor) / (dataSet.LabelCount - 1)
-            colors = tuple(self._lightenColor(color, min_factor + i * step)
-                           for i in range(len(dataSet.Labels)))
+            colors = tuple(
+                self._lightenColor(color, min_factor + i * step)
+                for i in range(len(dataSet.Labels))
+            )
         for i, label in enumerate(dataSet.Labels):
             self._generate_simp_plot_for_label(dataSet, label, ax, colors[i])
 
     def _generate_min_plot_for_collection(self, collection: List[DataSet]):
-        if (len(self.COLORS) < len(collection)):
+        if len(self.COLORS) < len(collection):
             sys.exit("CRITICAL FAILURE: Too many datasets selected!")
         fig, ax = plt.subplots()
         for i, dataSet in enumerate(collection):
             self._generate_min_plot_for_dataset(
-                dataSet, fig, ax, mpl.colors.ColorConverter.to_rgb(self.COLORS[i]))
+                dataSet, fig, ax, mpl.colors.ColorConverter.to_rgb(self.COLORS[i])
+            )
 
     def _lightenColor(self, rgb, factor) -> COLOR_TYPE:
         h, l, s = colorsys.rgb_to_hls(*rgb)
@@ -124,7 +207,7 @@ class LotusPlot:
         if self._draw_title:
             ax.set_title(dataset.Title)
         self._generate_min_plot_for_dataset(dataset, fig, ax)
-        plt.legend(loc='best')
+        plt.legend(loc="best")
         plt.savefig(file)
         plt.close()
 
@@ -134,13 +217,14 @@ class LotusPlot:
 
     def exportMinPlotForDatasets(self):
         file = self._generate_filename("MinPlot")
-        fig, axs = plt.subplots(len(self._datasets), figsize=(
-            5, 5 * len(self._datasets)), sharex=True)
+        fig, axs = plt.subplots(
+            len(self._datasets), figsize=(5, 5 * len(self._datasets)), sharex=True
+        )
         for i, dataset in enumerate(self._datasets):
             if self._draw_title:
                 axs[i].set_title(dataset.Title)
             self._generate_min_plot_for_dataset(dataset, fig, axs[i])
-            axs[i].legend(loc='best')
+            axs[i].legend(loc="best")
         plt.savefig(file)
         plt.close()
 
@@ -150,7 +234,7 @@ class LotusPlot:
         if self._draw_title:
             ax.set_title(dataset.Title)
         self._generate_simp_plot_for_dataset(dataset, fig, ax)
-        plt.legend(loc='best')
+        plt.legend(loc="best")
         plt.savefig(file)
         plt.close()
 
@@ -162,6 +246,10 @@ class LotusPlot:
         pass
 
     def _generate_filename(self, name) -> str:
-        filename = name + "_" + datetime.now().strftime("%d-%b-%Y(%H-%M-%S-%f)") + \
-            self._file_extension
+        filename = (
+            name
+            + "_"
+            + datetime.now().strftime("%d-%b-%Y(%H-%M-%S-%f)")
+            + self._file_extension
+        )
         return path.join(self._outpath, filename)

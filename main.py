@@ -1,12 +1,10 @@
 """
 DOC STRING
+
+asdf
 """
-
-# built-in imports
 import glob
-# third-party modules
 
-# own modules
 from LotusParser import LotusParser
 from LotusPlot import LotusPlot
 
@@ -65,8 +63,7 @@ def plot(datasets):
 
 
 if __name__ == "__main__":
-    """Main entry point to execute Lotus"""
-    file_dir = setup_parsing()
+    # file_dir = setup_parsing()
     # datasets = parsing(file_dir)
     # plot(datasets)
 
@@ -84,5 +81,5 @@ if __name__ == "__main__":
     print("PLOTTER: START -----------------------------------------")
     plotter = LotusPlot(parser.getDataSets())
     plotter.enableTitle()
-    plotter.exportSimpPlotPerDataset()
+    plotter.exportMinPlotPerDataset()
     print("PLOTTER: COMPLETE --------------------------------------")

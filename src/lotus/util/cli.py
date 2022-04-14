@@ -12,27 +12,36 @@ __email__ = "maximilian.anzinger@tum.de"
 __status__ = "Development"
 
 import glob
-from typing import Any, Callable, List, Tuple
+from typing import Any, Callable, List, Tuple, Type
 from lotus.dataset import DataSet
-from lotus.parser import LotusParser
+from lotus.parser import Parser, LotusParser
 from lotus.plot import LotusPlot
 
 
 def _setup_parsing() -> str:
     print("SETUP: START -------------------------------------------\n")
-    print("Enter file: (-h for help) ------------------------------")
-    while (file_dir := input()) in ["-h", "h", "help"]:
-        print("Possible candidates:")
-        for file in glob.glob("**/***.csv", recursive=True):
-            print(file)
-        print("\nEnter file: (-h for help) ------------------------------")
+
+    file_dir = ""
+    while True:
+        print("Enter file: (-h for help) ------------------------------")
+        user_input = input()
+        if user_input in ["-h", "h", "help"]:
+            print("Possible candidates:")
+            for file in glob.glob("**/***.csv", recursive=True):
+                print(file)
+            print()
+        else:
+            file_dir = user_input
+            print()
+            break
     print("SETUP: COMPLETE ----------------------------------------\n")
+
     return file_dir
 
 
-def _parsing(file_dir: str):
+def _parsing(file_dir: str, cls: Type[Parser]):
     print("PARSER: START ------------------------------------------")
-    parser = LotusParser(file_dir)
+    parser = cls(file_dir)
     parser.parse()
     print("PARSER: found " + str(len(parser.getDataSets())) + " valid DataSets")
     print("PARSER: COMPLETE ---------------------------------------\n")
@@ -81,11 +90,14 @@ def _setup_plot() -> List[Tuple[Callable[[LotusPlot], Any], str]]:
                     "Please select a number between "
                     + str(0)
                     + " and "
-                    + str(len(options))
+                    + str(len(options) - 1)
                 )
         except ValueError:
             print(
-                "Please select a number between " + str(0) + " and " + str(len(options))
+                "Please select a number between "
+                + str(0)
+                + " and "
+                + str(len(options) - 1)
             )
 
     calls.append((options[plot][1], "Running: " + options[plot][0]))
@@ -109,7 +121,7 @@ def _plot(datasets: List[DataSet], calls: List[Tuple[Callable[[LotusPlot], Any],
 
 def cli():
     file_dir = _setup_parsing()
-    datasets = _parsing(file_dir)
+    datasets = _parsing(file_dir, LotusParser)
     calls = _setup_plot()
     _plot(datasets, calls)
 

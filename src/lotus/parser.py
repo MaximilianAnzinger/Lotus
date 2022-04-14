@@ -1,6 +1,7 @@
 """
 TODO
 """
+import abc
 import csv
 from typing import List
 from typing import Tuple
@@ -17,7 +18,30 @@ __email__ = "maximilian.anzinger@tum.de"
 __status__ = "Development"
 
 
-class LotusParser:
+class Parser(metaclass=abc.ABCMeta):
+    @classmethod
+    def __subclasshook__(cls, subclass):
+        return (
+            hasattr(subclass, "parse")
+            and callable(subclass.parse)
+            and hasattr(subclass, "getDataSets")
+            and callable(subclass.getDataSets)
+        )
+
+    @abc.abstractmethod
+    def __init__(self, fileDir, floatSep=".", delimiter=",", quotechar="|") -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def parse(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def getDataSets(self):
+        raise NotImplementedError
+
+
+class LotusParser(Parser):
     def __init__(self, fileDir, floatSep=".", delimiter=",", quotechar="|") -> None:
         self.fileDir = fileDir
 
@@ -31,11 +55,11 @@ class LotusParser:
         self.dataSets: List[DataSet] = []
 
     def parse(self):
-        self.importData()
+        self._import_data()
         self._parse_datasets()
         del self.rawData
 
-    def importData(self):
+    def _import_data(self):
         with open(self.fileDir, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=self.delimiter)
             self.rawData = []

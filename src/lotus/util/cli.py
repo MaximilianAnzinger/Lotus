@@ -15,7 +15,7 @@ import glob
 from typing import Any, Callable, List, Tuple, Type
 from lotus.dataset import DataSet
 from lotus.parser import Parser, LotusParser
-from lotus.plot import LotusPlot
+from lotus.plot import LotusPlot, Plotter
 
 
 def _setup_parsing() -> str:
@@ -48,9 +48,9 @@ def _parsing(file_dir: str, cls: Type[Parser]):
     return parser.getDataSets()
 
 
-def _setup_plot() -> List[Tuple[Callable[[LotusPlot], Any], str]]:
+def _setup_plot() -> List[Tuple[Callable[[Plotter], Any], str]]:
 
-    calls: List[Tuple[Callable[[LotusPlot], Any], str]] = []
+    calls: List[Tuple[Callable[[Plotter], Any], str]] = []
 
     print("SETUP: START -------------------------------------------\n")
 
@@ -64,7 +64,7 @@ def _setup_plot() -> List[Tuple[Callable[[LotusPlot], Any], str]]:
         calls.append((lambda plotter: plotter.enableTitle(), "Title enabled"))
 
     plot = -1
-    options: Tuple[Tuple[str, Callable[[LotusPlot], Any]], ...] = (
+    options: Tuple[Tuple[str, Callable[[Plotter], Any]], ...] = (
         (
             "export min plot per dataset",
             lambda plotter: plotter.exportMinPlotPerDataset(),
@@ -106,10 +106,14 @@ def _setup_plot() -> List[Tuple[Callable[[LotusPlot], Any], str]]:
     return calls
 
 
-def _plot(datasets: List[DataSet], calls: List[Tuple[Callable[[LotusPlot], Any], str]]):
-    print("PLOTTER: START -----------------------------------------\n")
+def _plot(
+    datasets: List[DataSet],
+    cls: Type[Plotter],
+    calls: List[Tuple[Callable[[Plotter], Any], str]],
+):
+    print("PLOTTER: START -----------------------------------------")
 
-    plotter = LotusPlot(datasets)
+    plotter = cls(datasets)
 
     for call, msg in calls:
         print(msg)
@@ -123,7 +127,7 @@ def cli():
     file_dir = _setup_parsing()
     datasets = _parsing(file_dir, LotusParser)
     calls = _setup_plot()
-    _plot(datasets, calls)
+    _plot(datasets, LotusPlot, calls)
 
 
 if __name__ == "__main__":

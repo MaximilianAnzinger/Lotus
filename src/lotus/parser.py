@@ -5,6 +5,7 @@ import abc
 import csv
 from typing import List
 from typing import Tuple
+from typing import TypeVar
 
 from lotus.dataset import DataSet
 
@@ -16,6 +17,8 @@ __version__ = "0.1.0"
 __maintainer__ = "Maximilian Anzinger"
 __email__ = "maximilian.anzinger@tum.de"
 __status__ = "Development"
+
+TParser = TypeVar("TParser", bound="Parser")
 
 
 class Parser(metaclass=abc.ABCMeta):
@@ -33,16 +36,16 @@ class Parser(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def parse(self):
+    def parse(self: TParser) -> TParser:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def getDataSets(self):
+    def getDataSets(self) -> List[DataSet]:
         raise NotImplementedError
 
 
 class LotusParser(Parser):
-    def __init__(self, fileDir, floatSep=".", delimiter=",", quotechar="|") -> None:
+    def __init__(self, fileDir, floatSep=".", delimiter=",", quotechar="|"):
         self.fileDir = fileDir
 
         self.floatSep = floatSep
@@ -58,8 +61,9 @@ class LotusParser(Parser):
         self._import_data()
         self._parse_datasets()
         del self.rawData
+        return self
 
-    def _import_data(self):
+    def _import_data(self) -> None:
         with open(self.fileDir, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=self.delimiter)
             self.rawData = []
@@ -95,7 +99,7 @@ class LotusParser(Parser):
         self.dataSets.append(dataSet)
         return base_offset + offset
 
-    def _parse_datasets(self):
+    def _parse_datasets(self) -> None:
 
         if len(self.rawData) == 0:
             raise ValueError(

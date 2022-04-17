@@ -2,10 +2,12 @@ import codecs
 
 import lotus.util.cli as cli
 import pytest
+from lotus.dataset import DataSet
+from lotus.parser import LotusParser
 from tests.pytestregex import PytestRegex
 
 
-parsing_regex = {
+setup_parsing_regex = {
     "start-label": r"SETUP: START -*\n\n",
     "enter-file": r"Enter file: \(-h for help\) -*\n",
     "candidates": r"Possible candidates:\n(.*\.csv\n)*\n",
@@ -14,11 +16,11 @@ parsing_regex = {
 
 
 def _setup_parsing_regex_generator(help_input=0):
-    out = parsing_regex["start-label"]
+    out = setup_parsing_regex["start-label"]
     for i in range(help_input):
-        out += parsing_regex["enter-file"] + parsing_regex["candidates"]
-    out += parsing_regex["enter-file"] + r"\n"
-    out += parsing_regex["end-label"]
+        out += setup_parsing_regex["enter-file"] + setup_parsing_regex["candidates"]
+    out += setup_parsing_regex["enter-file"] + r"\n"
+    out += setup_parsing_regex["end-label"]
     return out
 
 
@@ -93,7 +95,64 @@ def test_setup_parsing_return(patch_stdin, expected):
 TODO _parsing
 """
 
-plot_regex = {
+parsing_regex = {
+    "start-label": r"PARSER: START -*\n",
+    "datasets-found": (r"PARSER: found ", r" valid DataSets\n"),
+    "end-label": r"PARSER: COMPLETE -*\n\n",
+}
+
+datasets = [
+    [],
+    [DataSet("title1", ("group1",), ("label1",))],
+    [
+        DataSet("title1", ("group1",), ("label1",)),
+        DataSet("title2", ("group1", "group2"), ("label1", "label2")),
+    ],
+]
+
+
+def _parsing_io_regex_generator(datasets):
+    out = parsing_regex["start-label"]
+    out += (
+        parsing_regex["datasets-found"][0]
+        + str(len(datasets))
+        + parsing_regex["datasets-found"][1]
+    )
+    out += parsing_regex["end-label"]
+    return out
+
+
+@pytest.mark.parametrize(
+    "capture_stdout,mock_LotusParser_parse,mock_LotusParser_getDataSets,expected",
+    [
+        (
+            "capture_stdout",
+            "mock_LotusParser_parse",
+            (ds,),
+            _parsing_io_regex_generator(ds),
+        )
+        for ds in datasets
+    ],
+    indirect=[
+        "capture_stdout",
+        "mock_LotusParser_parse",
+        "mock_LotusParser_getDataSets",
+    ],
+)
+def test_parsing_io(
+    capture_stdout, mock_LotusParser_parse, mock_LotusParser_getDataSets, expected
+):
+    cli._parsing("file_dir", LotusParser)
+    assert capture_stdout["stdout"] == PytestRegex(expected), (
+        "expected: <"
+        + codecs.decode(expected, "unicode_escape")
+        + "> but was: <"
+        + capture_stdout["stdout"]
+        + ">"
+    )
+
+
+setup_plot_regex = {
     "start-label": r"SETUP: START -*\n\n",
     "print-titles": r"Print titles: \(y/n\) -*\n",
     "select-plot": r"Select plot: -*\n",
@@ -104,18 +163,18 @@ plot_regex = {
 
 
 def _setup_plot_regex_generator(invalid_titles=0, invalid_ids=0, max_id=0):
-    out = plot_regex["start-label"]
+    out = setup_plot_regex["start-label"]
     for i in range(invalid_titles + 1):
-        out += plot_regex["print-titles"]
+        out += setup_plot_regex["print-titles"]
     out += r"\n"
     for i in range(invalid_ids + 1):
-        out += plot_regex["select-plot"]
+        out += setup_plot_regex["select-plot"]
         for j in range(max_id + 1):
-            out += str(j) + r" - " + plot_regex["option-label"]
+            out += str(j) + r" - " + setup_plot_regex["option-label"]
         if i != invalid_ids:
-            out += plot_regex["select-plot-invalid"] + str(max_id) + r"\n"
+            out += setup_plot_regex["select-plot-invalid"] + str(max_id) + r"\n"
 
-    out += plot_regex["end-label"]
+    out += setup_plot_regex["end-label"]
     return out
 
 
@@ -187,8 +246,12 @@ def test_setup_plot_io(capture_stdout, patch_stdin, expected):
 #                              (("h", "h", "h", "file_dir"), "file_dir"),
 #                          ], indirect=['patch_stdin'])
 # def test_setup_plot_return(patch_stdin, expected):
-#     assert cli._setup_parsing() == expected
+#     assert cli._setup_plot() == expected
 
 """
 TODO _plot
 """
+plot_regex = {
+    "start-label": r"PLOTTER: START -*\n",
+    "end-label": r"PLOTTER: COMPLETE -*\n\n",
+}

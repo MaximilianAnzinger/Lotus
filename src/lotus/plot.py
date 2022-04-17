@@ -10,6 +10,7 @@ from os import path
 from typing import List
 from typing import Optional
 from typing import Tuple
+from typing import TypeVar
 from typing import Union
 
 import matplotlib as mpl
@@ -29,6 +30,8 @@ __status__ = "Development"
 
 COLOR_TYPE = Union[str, Tuple[float, float, float]]
 
+TPlotter = TypeVar("TPlotter", bound="Plotter")
+
 
 class Plotter(metaclass=abc.ABCMeta):
     @classmethod
@@ -45,23 +48,23 @@ class Plotter(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def enableTitle(self):
+    def enableTitle(self: TPlotter) -> TPlotter:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def exportMinPlotPerDataset(self):
+    def exportMinPlotPerDataset(self: TPlotter) -> TPlotter:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def exportMinPlotForDatasets(self):
+    def exportMinPlotForDatasets(self: TPlotter) -> TPlotter:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def exportSimpPlotPerDataset(self):
+    def exportSimpPlotPerDataset(self: TPlotter) -> TPlotter:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def exportSimpPlotForDatasets(self):
+    def exportSimpPlotForDatasets(self: TPlotter) -> TPlotter:
         raise NotImplementedError
 
 
@@ -84,6 +87,7 @@ class LotusPlot(Plotter):
 
     def enableTitle(self):
         self._draw_title = True
+        return self
 
     def _generate_field_plot_for_label(
         self,
@@ -214,6 +218,7 @@ class LotusPlot(Plotter):
     def exportMinPlotPerDataset(self):
         for dataset in self._datasets:
             self._export_min_plot_for_dataset(dataset)
+        return self
 
     def exportMinPlotForDatasets(self):
         file = self._generate_filename("MinPlot")
@@ -227,6 +232,7 @@ class LotusPlot(Plotter):
             axs[i].legend(loc="best")
         plt.savefig(file)
         plt.close()
+        return self
 
     def _export_simp_plot_for_dataset(self, dataset: DataSet):
         file = self._generate_filename(dataset.Title)
@@ -241,9 +247,11 @@ class LotusPlot(Plotter):
     def exportSimpPlotPerDataset(self):
         for dataset in self._datasets:
             self._export_simp_plot_for_dataset(dataset)
+        return self
 
     def exportSimpPlotForDatasets(self):
         pass
+        return self
 
     def _generate_filename(self, name) -> str:
         filename = (

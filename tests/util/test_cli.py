@@ -91,10 +91,6 @@ def test_setup_parsing_return(patch_stdin, expected):
     assert cli._setup_parsing() == expected
 
 
-"""
-TODO _parsing
-"""
-
 parsing_regex = {
     "start-label": r"PARSER: START -*\n",
     "datasets-found": (r"PARSER: found ", r" valid DataSets\n"),

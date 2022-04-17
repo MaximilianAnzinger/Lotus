@@ -152,6 +152,22 @@ def test_parsing_io(
     )
 
 
+@pytest.mark.parametrize(
+    "mock_LotusParser_parse,mock_LotusParser_getDataSets,expected",
+    [
+        (
+            "mock_LotusParser_parse",
+            (ds,),
+            ds,
+        )
+        for ds in datasets
+    ],
+    indirect=["mock_LotusParser_parse", "mock_LotusParser_getDataSets"],
+)
+def test_parsing_return(mock_LotusParser_parse, mock_LotusParser_getDataSets, expected):
+    assert cli._parsing("file_dir", LotusParser) == expected
+
+
 setup_plot_regex = {
     "start-label": r"SETUP: START -*\n\n",
     "print-titles": r"Print titles: \(y/n\) -*\n",

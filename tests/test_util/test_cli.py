@@ -1,9 +1,9 @@
 import codecs
 
-import lotus.util.cli as cli
 import pytest
 from lotus.dataset import DataSet
 from lotus.parser import LotusParser
+from lotus.util import cli
 from tests.pytestregex import PytestRegex
 
 

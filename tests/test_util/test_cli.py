@@ -3,7 +3,9 @@ import codecs
 import pytest
 from lotus.dataset import DataSet
 from lotus.parser import LotusParser
-from lotus.util import cli
+from lotus.util.cli import _parsing
+from lotus.util.cli import _setup_parsing
+from lotus.util.cli import _setup_plot
 from tests.pytestregex import PytestRegex
 
 
@@ -67,7 +69,7 @@ def _setup_parsing_regex_generator(help_input=0):
     indirect=["patch_stdin", "capture_stdout"],
 )
 def test_setup_parsing_io(capture_stdout, patch_stdin, expected):
-    cli._setup_parsing()
+    _setup_parsing()
     assert capture_stdout["stdout"] == PytestRegex(expected), (
         "expected: <"
         + codecs.decode(expected, "unicode_escape")
@@ -88,7 +90,7 @@ def test_setup_parsing_io(capture_stdout, patch_stdin, expected):
     indirect=["patch_stdin"],
 )
 def test_setup_parsing_return(patch_stdin, expected):
-    assert cli._setup_parsing() == expected
+    assert _setup_parsing() == expected
 
 
 parsing_regex = {
@@ -138,7 +140,7 @@ def _parsing_io_regex_generator(datasets):
 def test_parsing_io(
     capture_stdout, mock_LotusParser_parse, mock_LotusParser_getDataSets, expected
 ):
-    cli._parsing("file_dir", LotusParser)
+    _parsing("file_dir", LotusParser)
     assert capture_stdout["stdout"] == PytestRegex(expected), (
         "expected: <"
         + codecs.decode(expected, "unicode_escape")
@@ -161,7 +163,7 @@ def test_parsing_io(
     indirect=["mock_LotusParser_parse", "mock_LotusParser_getDataSets"],
 )
 def test_parsing_return(mock_LotusParser_parse, mock_LotusParser_getDataSets, expected):
-    assert cli._parsing("file_dir", LotusParser) == expected
+    assert _parsing("file_dir", LotusParser) == expected
 
 
 setup_plot_regex = {
@@ -240,7 +242,7 @@ def _setup_plot_io_args(invalid_titles=0, invalid_ids=0, max_id=0):
     indirect=["patch_stdin", "capture_stdout"],
 )
 def test_setup_plot_io(capture_stdout, patch_stdin, expected):
-    cli._setup_plot()
+    _setup_plot()
     assert capture_stdout["stdout"] == PytestRegex(expected), (
         "expected: <"
         + codecs.decode(expected, "unicode_escape")
@@ -258,7 +260,7 @@ def test_setup_plot_io(capture_stdout, patch_stdin, expected):
 #                              (("h", "h", "h", "file_dir"), "file_dir"),
 #                          ], indirect=['patch_stdin'])
 # def test_setup_plot_return(patch_stdin, expected):
-#     assert cli._setup_plot() == expected
+#     assert _setup_plot() == expected
 
 """
 TODO _plot
